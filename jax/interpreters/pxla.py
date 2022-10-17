@@ -2812,15 +2812,20 @@ def lower_sharding_computation(
                              if d.process_index == process_index]
   if len(device_assignment) != len(local_device_assignment):
     check_multihost_collective_allowlist(jaxpr)
-    warnings.warn(
-        "Running operations on `Array`s that are not fully addressable by this "
-        "process (i.e. `Array`s with data sharded across multiple devices and "
-        "processes.) is dangerous. It’s very important that all processes run "
-        "the same cross-process computations in the same order otherwise it "
-        "can lead to hangs.\n"
-        "If you’re not already familiar with JAX’s multi-process "
-        "programming model, please read "
-        "https://jax.readthedocs.io/en/latest/multi_process.html.")
+    # TODO(yashkatariya): Once jit and pjit's frontend is merged, enter the
+    # context in pjit and remove the `api_name` check from here.
+    if config.jax_array and api_name == 'jit' and not config.jax_spmd_mode:
+      raise RuntimeError(
+          "Running operations on `Array`s that are not fully addressable by this "
+          "process (i.e. `Array`s with data sharded across multiple devices and "
+          "processes.) is dangerous. It’s very important that all processes run "
+          "the same cross-process computations in the same order otherwise it "
+          "can lead to hangs.\n"
+          "If you’re not already familiar with JAX’s multi-process "
+          "programming model, please read "
+          "https://jax.readthedocs.io/en/latest/multi_process.html\n"
+          "To fix this error, run your `jitted` computation inside "
+          "`with jax._src.config.spmd_mode(True):` context manager.")
 
   has_outfeed = core.jaxpr_uses_outfeed(jaxpr)
   jaxpr = dispatch.apply_outfeed_rewriter(jaxpr)

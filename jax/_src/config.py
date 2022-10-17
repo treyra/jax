@@ -671,6 +671,13 @@ jax_array = config.define_bool_state(
           'used.'))
 
 
+spmd_mode = config.define_bool_state(
+    name='jax_spmd_mode',
+    default=False,
+    help=("If True, math on `jax.Array`'s that are not fully addressable i.e. "
+          "spans across multiple processes is allowed."))
+
+
 distributed_debug = config.define_bool_state(
     name='jax_distributed_debug',
     default=False,
