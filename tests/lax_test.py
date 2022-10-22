@@ -1876,6 +1876,7 @@ class LaxTest(jtu.JaxTestCase):
     [dict(op=op, np_op=np_op) for op, np_op in [
       (lax.cumsum, np.cumsum),
       (lax.cumprod, np.cumprod),
+      (lax.cumlogsumexp, np.logaddexp.accumulate),
       (lax.cummax, np.maximum.accumulate),
       (lax.cummin, np.minimum.accumulate),
     ]],

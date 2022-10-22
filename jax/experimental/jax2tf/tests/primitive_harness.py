@@ -1527,9 +1527,13 @@ def _make_cumreduce_harness(name,
 # Validate dtypes for each function
 for f_jax in [
     lax_control_flow.cummin, lax_control_flow.cummax, lax_control_flow.cumsum,
-    lax_control_flow.cumprod
+    lax_control_flow.cumprod, lax_control_flow.cumlogsumexp
 ]:
   for dtype in jtu.dtypes.all:
+    # cumlogsumexp is only defined for floating point types.
+    if (f_jax == lax_control_flow.cumlogsumexp and
+        not np.issubdtype(dtype, np.floating)):
+      continue
     if dtype == np.bool_:
       continue
     _make_cumreduce_harness("dtype_by_fun", dtype=dtype, f_jax=f_jax)
@@ -1541,6 +1545,7 @@ for f_jax in [
 
   # Validate reverse for each function
   _make_cumreduce_harness("reverse", reverse=True, f_jax=f_jax)
+
 
 
 ### TOP_K
