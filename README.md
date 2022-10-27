@@ -392,7 +392,7 @@ binary package with `pip` or `conda`, or to [build JAX from
 source](https://jax.readthedocs.io/en/latest/developer.html#building-from-source).
 
 We support installing or building `jaxlib` on Linux (Ubuntu 16.04 or later) and
-macOS (10.12 or later) platforms.
+macOS (10.12 or later) platforms. 
 
 Windows users can use JAX on CPU and GPU via the [Windows Subsystem for
 Linux](https://docs.microsoft.com/en-us/windows/wsl/about). In addition, there
@@ -413,7 +413,7 @@ pip install --upgrade "jax[cpu]"
 ```
 
 On Linux, it is often necessary to first update `pip` to a version that supports
-`manylinux2014` wheels.
+`manylinux2014` wheels. Note these existing wheels are currently for `x86_64` architectures only. Trying to pip install with other architectures may lead to `jaxlib` not being installed alongside `jax`, although `jax` may successfully install. 
 **These `pip` installations do not work with Windows, and may fail silently; see
 [above](#installation).**
 
